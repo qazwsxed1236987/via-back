@@ -15,7 +15,7 @@ app.use(
         credentials: true,
     })
 );
-
+app.get('test', (req, res) => res.json({ answer: 42 }));
 const todos = require("./servers/todoserver.js")
 const member = require("./servers/memberserver.js")
 
