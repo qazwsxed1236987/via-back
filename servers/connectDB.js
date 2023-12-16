@@ -3,7 +3,7 @@ const mysql = require('mysql2/promise');
 
 // database message
 const pool = mysql.createPool({
-    host: '192.168.20.189',
+    host: 'tcp://0.tcp.jp.ngrok.io:16217',
     user: 'root',
     password: 'asd620134',
     database: 'via',
