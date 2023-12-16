@@ -1,12 +1,11 @@
-const express = require("express");
-const router = express.Router();
+const express = require("express")
+const router = express.Router()
 
-router.use(express.json());
+router.use(express.json())
 
-const db = require("./connectDB.js");
+const db = require("./connectDB.js")
 
-
-//註冊資料 
+//regsiter data
 router.route("/regsiter").post(async (req, res) => {
     const { Names, Email, Password } = req.body
 
@@ -14,25 +13,18 @@ router.route("/regsiter").post(async (req, res) => {
     (name,password,email) VALUES
     ('${Names}','${Password}','${Email}');`
 
-    const data = await db.query(sql);
-
-    res.json(data);
-});
-//登入檢查
-// allen=member
+    const data = await db.query(sql)
+    res.json(data)
+})
+//login check
 router.route("/login").post(async (req, res) => {
     const { Email, Password } = req.body
 
     const sql = `SELECT name, email
                 FROM member
                 WHERE password = '${Password}' AND email = '${Email}';`
-    const data = await db.query(sql);
-
-    // console.log(data[0][0]);
-
-    res.json(data);
-});
-
-
+    const data = await db.query(sql)
+    res.json(data)
+})
 
 module.exports = router

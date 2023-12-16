@@ -1,25 +1,18 @@
+require('dotenv').config()
 const mysql = require('mysql2/promise');
-// 讀取.env檔用
-// require('dotenv/config.js');
 
-
-// const DB_HOST = '127.0.0.1'
-// const DB_DATABASE = 'travel_kh'
-// const DB_USERNAME = 'root'
-// const DB_PASSWORD = 'root'
-
-// 資料庫連結資訊
+// database message
 const pool = mysql.createPool({
-    host: '127.0.0.1',
-    user: 'root',
-    password: '',
-    database: 'via',
+    host: process.env.SQL_HOST,
+    user: process.env.SQL_USER,
+    password: process.env.SQL_PASSWORD,
+    database: process.env.SQL_DATABASE,
     connectionLimit: 10,
     waitForConnections: true,
     dateStrings: true
 })
 
-// 啟動時測試連線
+// test connect
 pool
     .getConnection()
     .then((connection) => {
@@ -31,5 +24,4 @@ pool
         console.log(error)
     })
 
-// 輸出模組
 module.exports = pool;

@@ -1,39 +1,41 @@
-const express = require("express");
-const router = express.Router();
+const express = require("express")
+const router = express.Router()
 
-router.use(express.json());
+router.use(express.json())
 
-const db = require("./connectDB.js");
+const db = require("./connectDB.js")
 
 //get data
-// 差會員
-router.route("/").get(async (req, res) => {
+router.route("/").post(async (req, res) => {
+    const { name } = req.body
     const sql = `SELECT * 
                 from memos
-                WHERE names = 'allen';`;
-    const datas = await db.query(sql);
-    res.json(datas);
-});
+                WHERE names = ${name};`
+    const datas = await db.query(sql)
+    res.json(datas)
+})
 
-
-//新增資料  差指定時間寄出sendtime+會員names
+//add memos
 router.route("/add").post(async (req, res) => {
+    const date = new Date();
+    date.setHours(date.getHours() + 8);
+    const addDate = date.toISOString().slice(0, 16).replace('T', ' ');
 
-    // 此為編輯的當下時間(尚未轉時區)
-    let nowDate = new Date().toISOString().slice(0, 16).replace("T", " ");
     const { names, title, text, toemail, sendtime } = req.body
 
     const sql = `INSERT INTO memos 
-    (names,Title,Text,settime,toemail,sendtime) VALUES
-    ('${names}','${title}','${text}','${nowDate}','${toemail}','${sendtime}');`
-    const datas = await db.query(sql);
+    (names,title,text,settime,toemail,sendtime) VALUES
+    ('${names}','${title}','${text}','${addDate}','${toemail}','${sendtime}');`
+    const datas = await db.query(sql)
 
-    res.json(datas);
-});
-//修改資料 
+    res.json(datas)
+})
+//reset memo data 
 router.route("/reset").post(async (req, res) => {
-    // 此為編輯的修改時間(尚未轉時區)
-    let nowDate = new Date().toISOString().slice(0, 16).replace("T", " ");
+    const date = new Date();
+    date.setHours(date.getHours() + 8);
+    const resetDate = date.toISOString().slice(0, 16).replace('T', ' ');
+
     const { id, title, text, toemail, sendtime } = req.body
     const sql =
         `UPDATE memos SET 
@@ -41,25 +43,23 @@ router.route("/reset").post(async (req, res) => {
         text = '${text}',
         toemail = '${toemail}',
         sendtime = '${sendtime}',
-        resettime ='${nowDate}'
+        resettime ='${resetDate}'
         WHERE id = ${id};`
     const datas = await db.query(sql)
     res.json(datas)
-});
+})
 
-//刪除
+//deleted momo
 router.route("/deleted").post(async (req, res) => {
     const { id } = req.body
-    console.log(id);
     const sql = `DELETE FROM memos
                 WHERE id = ${id};`
     const datas = await db.query(sql)
     res.json(datas)
+})
 
-});
-//完成確認
+//memo completed check
 router.route("/completed").post(async (req, res) => {
-    console.log(req.body);
     const { id, toemail, sendtime, complete } = req.body
     const sql =
         `UPDATE memos SET 
@@ -69,11 +69,6 @@ router.route("/completed").post(async (req, res) => {
         WHERE id = ${id};`
     const datas = await db.query(sql)
     res.json(datas)
-});
-
-
-
-
-
+})
 
 module.exports = router
