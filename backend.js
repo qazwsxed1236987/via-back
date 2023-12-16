@@ -10,7 +10,7 @@ const port = process.env.PORT || 5001
 const cors = require("cors")
 app.use(
     cors({
-        origin: [process.env.ORIGIN_PORT],
+        origin: ['https://via-front.onrender.com'],
         methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true,
     })
