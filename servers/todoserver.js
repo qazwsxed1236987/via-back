@@ -8,10 +8,11 @@ const db = require("./connectDB.js")
 //get data
 router.route("/").post(async (req, res) => {
     const { name } = req.body
-    const sql = `SELECT * 
-                from memos
-                WHERE names = ${name};`
-    const datas = await db.query(sql)
+    const sql = `SELECT * FROM memos WHERE names = ?`
+    const datas = await db.query(sql, [name]);
+    if (datas.length === 0) {
+        return res.json({ message: 'No data' });
+    }
     res.json(datas)
 })
 
